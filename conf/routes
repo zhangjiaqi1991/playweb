@@ -1,0 +1,17 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+
+
+# 显示留言列表和发言表单
+GET     /                          controllers.Application.m
+
+# 使用POST方式提交留言
+POST    /postMsg                    controllers.Application.postMsg
+
+POST    /upload                     controllers.Application.upload
+
+GET    /download/:path          controllers.Application.download(path:String)
+
+POST     /todownload               controllers.Application.toDownload

@@ -1,0 +1,64 @@
+@(msgs: List[Message], msgForm: Form[(String, String,String,String,String,String)])
+@*
+模板入参:
+第一个名为msgs的List[Message]类型参数;
+第二个名为msgForm的Form[(String, String)]类型参数
+*@
+
+@* 导入 helper 包下的类和对象，因为需要其中的form来生成表单 *@
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+@* 调用main.scala.html模板 *@
+@main("Spark运行窗口") {
+    <h2>运行状态</h2>
+    <ul>
+        @* 提取 msgs 入参中的全部数据 *@
+        @msgs.map { message =>
+            <li>
+                @* 提取名字 *@
+                <p><strong>@message.xrow</strong></p>
+                @* 提取内容 *@
+                <p>@message.filename</p>
+                <p>@message.yrow</p>
+
+            </li>
+        }
+    </ul>
+
+    <h2>参数设置</h2>
+    @* 创建表单，告知表单提交时发送POST给routes.Application.postMsg来处理 *@
+    @form(routes.Application.postMsg) {
+        @* 生成名字的输入框*@
+        @inputText(msgForm("xrow"), '_label -> "经度所在列(默认2)",'placeholder->"2")
+        @* 生成内容的输入框 *@
+        @inputText(msgForm("yrow"), '_label -> "纬度所在列(默认3)",'placeholder->"3")
+        @inputText(msgForm("filename"), '_label -> "文件名（包括后缀）")
+        @inputText(msgForm("percent"), '_label -> "阈值")
+        @inputText(msgForm("ram"), '_label -> "内存(默认2G)",'placeholder->"2G")
+        @inputText(msgForm("cores"), '_label -> "核数(默认20)",'placeholder->"20")
+        @* 生成用于提交的按钮 *@
+        <input type="submit" value="运行">
+    }
+    <h2>上传文件</h2>
+    @form(action = routes.Application.upload(), 'enctype -> "multipart/form-data") {
+
+        <input type="file" name="file">
+
+        <p>
+            <input type="submit" value="上传">
+        </p>
+    }
+    <h2>下载结果</h2>
+    @form(action = routes.Application.toDownload()) {
+
+        @*<input type="file" name="picture">*@
+
+        <p>
+            <input type="submit" value="下载结果">
+        </p>
+    }
+
+
+}
